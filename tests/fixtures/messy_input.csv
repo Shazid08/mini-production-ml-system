@@ -1,0 +1,16 @@
+internet_service,paperless_billing,streaming_movies,tech_support,customer_id,contract,online_security,monthly_charges,total_charges,multiple_lines,senior_citizen,dependents,gender,payment_method,partner,streaming_tv,phone_service,tenure_months,device_protection,online_backup,churn,notes
+Fiber optic,Yes,No,No,M-01,Month-to-month,No,89.65,358.6,No,No,No,Female,Electronic check,No,Yes,Yes,4,No,No,1,clean row
+Fiber optic,Yes,No,No,  M-02  ,Month-to-month,No,89.65,358.6,No,No,No,Male ,Electronic check, Yes ,Yes,Yes,4,No,No,1,padded whitespace
+Fiber optic,Yes,No,No,M-03,Three year,No,89.65,358.6,No,No,No,Female,Electronic check,No,Yes,Yes,4,No,No,1,unseen contract
+Fiber optic,Yes,No,No,M-04,month-to-month,No,89.65,358.6,No,No,No,Female,PayPal,No,Yes,Yes,4,No,No,1,unseen payment + wrong case
+Fiber optic,Yes,No,No,M-05,Month-to-month,No,89.65,358.6,No,No,No,Female,Electronic check,No,Yes,Yes,abc,No,No,1,tenure not a number
+Fiber optic,Yes,No,No,M-06,Month-to-month,No,-20,358.6,No,No,No,Female,Electronic check,No,Yes,Yes,4,No,No,1,negative charge
+Fiber optic,Yes,No,No,M-07,,No,89.65,358.6,No,No,No,Female,Electronic check,No,Yes,Yes,4,No,No,1,contract blank
+Fiber optic,Yes,No,No,M-08,Month-to-month,No,89.65,,No,No,No,Female,Electronic check,No,Yes,Yes,0,No,No,1,"new customer, blank total"
+Fiber optic,Yes,No,No,M-09,Month-to-month,No,89.65, ,No,No,No,Female,Electronic check,No,Yes,Yes,5,No,No,1,"blank total, tenure 5"
+Fiber optic,Yes,No,No,M-10,Month-to-month,No,89.65,26895,No,No,No,Female,Electronic check,No,Yes,Yes,300,No,No,1,extreme tenure
+Fiber optic,Yes,No,No,M-11,Month-to-month,No,89.65,358.6,No,No,No,Female,Electronic check,No,Yes,Yes,5000,No,No,1,impossible tenure
+Fiber optic,Yes,No,No,,Month-to-month,No,89.65,358.6,No,No,No,Female,Electronic check,No,Yes,Yes,4,No,No,1,missing customer_id
+Fiber optic,Yes,No,No,M-13,Month-to-month,No,89.65,358.6,No,No,No,Female,Electronic check,No,Yes,Yes,12.5,No,No,1,fractional tenure
+Fiber optic,Yes,No,No,M-14,Month-to-month,No,nan,358.6,No,No,No,Female,Electronic check,No,Yes,Yes,4,No,No,1,NaN charge
+Fiber optic,Yes,No,No,M-15,Month-to-month,No,1e3,4000,No,No,No,Female,Electronic check,No,Yes,Yes,4,No,No,1,high but possible charge

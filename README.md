@@ -123,3 +123,16 @@ predictions, probabilities in [0, 1], no leak columns among the features, identi
 API and batch output), the batch CLI (messy-file handling and exit codes) and the
 split logic. Three tests need the downloaded dataset and are skipped, with a message,
 until `python -m src.data_pipeline` has been run.
+
+## 7. Benchmark
+
+```bash
+python -m serving.benchmark
+```
+
+Starts the API on localhost and sends 20 untimed warm-up requests (reported as cold
+start), then 1,000 timed requests from one client and 1,000 from 8 concurrent
+clients, each run repeated 3 times. It also times the model without HTTP and runs
+the batch CLI on a 100,000-row file built by repeating dataset rows (a throughput
+test, not an accuracy test). Raw results and the machine/library details are saved
+to `artifacts/benchmark_results.json`. The numbers depend on the machine they run on.

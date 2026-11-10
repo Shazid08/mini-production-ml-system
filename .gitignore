@@ -1,0 +1,18 @@
+# Python virtual environment (recreate with: pip install -r requirements.txt)
+.venv/
+
+# Python bytecode and test caches
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# OS and IDE clutter
+.DS_Store
+.idea/
+
+# Dataset files are not stored in Git (fetch with: python -m src.data_pipeline).
+# The empty data/ folder itself is kept via data/.gitkeep.
+data/*
+!data/.gitkeep
+# Small committed example for the batch CLI (20 test-split rows, no target column).
+!data/sample_input.csv

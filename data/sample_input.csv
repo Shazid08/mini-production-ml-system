@@ -1,0 +1,21 @@
+customer_id,tenure_months,monthly_charges,total_charges,gender,senior_citizen,partner,dependents,phone_service,multiple_lines,internet_service,online_security,online_backup,device_protection,tech_support,streaming_tv,streaming_movies,contract,paperless_billing,payment_method
+4690-LLKUA,17,45.05,770.6,Male,Yes,No,No,Yes,No,DSL,No,No,No,No,No,No,Month-to-month,Yes,Electronic check
+6968-URWQU,43,56.35,2391.15,Male,No,Yes,No,Yes,No,DSL,No,No,No,No,Yes,No,One year,Yes,Mailed check
+9926-PJHDQ,72,76.8,5468.45,Female,No,Yes,No,Yes,Yes,DSL,No,No,Yes,No,Yes,Yes,Two year,Yes,Bank transfer (automatic)
+4402-FTBXC,54,89.8,4667.0,Male,No,No,No,Yes,No,Fiber optic,Yes,No,Yes,No,Yes,No,Month-to-month,No,Mailed check
+2162-FRZAA,63,39.35,2395.05,Male,No,Yes,Yes,No,No phone service,DSL,No,Yes,Yes,Yes,No,No,Two year,No,Bank transfer (automatic)
+0310-VQXAM,9,19.85,178.8,Male,No,No,No,Yes,No,No,No internet service,No internet service,No internet service,No internet service,No internet service,No internet service,Month-to-month,No,Mailed check
+9430-NKQLY,72,25.1,1790.8,Male,No,Yes,Yes,Yes,Yes,No,No internet service,No internet service,No internet service,No internet service,No internet service,No internet service,Two year,Yes,Credit card (automatic)
+1096-ADRUX,66,74.25,4859.25,Female,No,Yes,Yes,Yes,Yes,Fiber optic,No,No,No,No,No,No,One year,Yes,Bank transfer (automatic)
+4830-FAXFM,19,24.1,439.2,Male,No,No,Yes,Yes,Yes,No,No internet service,No internet service,No internet service,No internet service,No internet service,No internet service,Month-to-month,Yes,Credit card (automatic)
+8375-DKEBR,1,69.6,69.6,Female,Yes,No,No,Yes,No,Fiber optic,No,No,No,No,No,No,Month-to-month,Yes,Electronic check
+2668-TZSPS,1,20.45,20.45,Male,No,No,No,Yes,No,No,No internet service,No internet service,No internet service,No internet service,No internet service,No internet service,Month-to-month,No,Mailed check
+5921-NGYRH,64,73.55,4764.0,Male,No,Yes,No,Yes,No,Fiber optic,Yes,No,No,No,No,No,Month-to-month,Yes,Mailed check
+6705-LXORM,5,70.05,302.6,Female,Yes,Yes,No,Yes,No,Fiber optic,No,No,No,No,No,No,Month-to-month,No,Electronic check
+0870-VEMYL,5,53.85,259.8,Female,No,No,No,Yes,No,DSL,Yes,No,No,Yes,No,No,Month-to-month,No,Credit card (automatic)
+9710-ZUSHQ,37,106.75,4056.75,Female,Yes,No,No,Yes,Yes,Fiber optic,Yes,Yes,No,No,Yes,Yes,Month-to-month,Yes,Bank transfer (automatic)
+1555-HAPSU,71,23.9,1663.5,Female,No,Yes,Yes,Yes,Yes,No,No internet service,No internet service,No internet service,No internet service,No internet service,No internet service,Two year,No,Credit card (automatic)
+4632-PAOYU,22,19.95,433.5,Male,No,Yes,Yes,Yes,No,No,No internet service,No internet service,No internet service,No internet service,No internet service,No internet service,One year,No,Mailed check
+3658-KIBGF,1,54.9,54.9,Female,No,No,No,Yes,No,DSL,Yes,Yes,No,No,No,No,Month-to-month,Yes,Electronic check
+2700-LUEVA,1,20.75,20.75,Male,No,No,No,Yes,No,No,No internet service,No internet service,No internet service,No internet service,No internet service,No internet service,Month-to-month,No,Credit card (automatic)
+0022-TCJCI,45,62.7,2791.5,Male,Yes,No,No,Yes,No,DSL,Yes,No,Yes,No,No,Yes,One year,No,Credit card (automatic)

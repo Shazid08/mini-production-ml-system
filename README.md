@@ -136,3 +136,14 @@ clients, each run repeated 3 times. It also times the model without HTTP and run
 the batch CLI on a 100,000-row file built by repeating dataset rows (a throughput
 test, not an accuracy test). Raw results and the machine/library details are saved
 to `artifacts/benchmark_results.json`. The numbers depend on the machine they run on.
+
+Results from one run (2026-11-12): Apple M3 Pro, 18 GB RAM, macOS 27.0.1, Python 3.12.7, AC Power, client and server on localhost, one uvicorn worker. Values are medians of 3 repeats, rounded.
+
+| API, 1,000 requests per run | p50 ms | p95 ms | p99 ms | mean ms | min ms | max ms | requests/s | errors |
+|---|---|---|---|---|---|---|---|---|
+| 1 client (sequential) | 4.05 | 4.22 | 4.33 | 4.10 | 3.85 | 23.75 | 243.6 | 0 |
+| 8 concurrent clients | 29.68 | 59.29 | 76.70 | 31.65 | 4.12 | 116.63 | 248.3 | 0 |
+
+- Server start-up to healthy: 1.22 s; first (cold) request: 44.38 ms (20 warm-up requests, excluded above).
+- Model time without HTTP, one record: full request path p50 3.30 ms, of which `predict_proba` p50 2.00 ms.
+- Batch, 100,000 rows (repeated dataset rows): whole run including start-up 2.50 s (40,036 rows/s); scoring only 82,065 rows/s, split into validation 0.94 s and prediction 0.17 s.

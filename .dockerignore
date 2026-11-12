@@ -1,0 +1,21 @@
+# Keep the build context small and free of local-only files.
+# Version control, environments and editor folders
+.git
+.venv
+.idea
+.DS_Store
+**/__pycache__
+**/*.pyc
+.pytest_cache
+
+# Local-only assignment instruction files: must never enter the image
+CLAUDE.md
+.claude
+docs
+
+# Data: only the committed 20-row sample is allowed in
+data/*
+!data/sample_input.csv
+
+# Not needed at runtime
+tests

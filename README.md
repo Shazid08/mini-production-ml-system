@@ -147,3 +147,43 @@ Results from one run (2026-11-12): Apple M3 Pro, 18 GB RAM, macOS 27.0.1, Python
 - Server start-up to healthy: 1.22 s; first (cold) request: 44.38 ms (20 warm-up requests, excluded above).
 - Model time without HTTP, one record: full request path p50 3.30 ms, of which `predict_proba` p50 2.00 ms.
 - Batch, 100,000 rows (repeated dataset rows): whole run including start-up 2.50 s (40,036 rows/s); scoring only 82,065 rows/s, split into validation 0.94 s and prediction 0.17 s.
+
+## 8. Docker (optional)
+
+Everything above also works without Docker. The image runs the API by default and
+contains the batch CLI. It is built on `python:3.12.7-slim-bookworm`
+(digest `sha256:60d9996b6a8a3689d36db740b49f4327be3be09a21122bd02fb8895abb38b50d`),
+installs the pinned `requirements.txt` plus `libgomp1` (the OpenMP runtime that
+LightGBM needs on slim images), and runs as a non-root user.
+
+```bash
+docker build -t churn-api .
+docker run -d --name churn-api -p 8000:8000 churn-api
+curl -s http://127.0.0.1:8000/health
+```
+
+`docker ps` shows the container as `healthy` once the built-in `HEALTHCHECK`
+(a request to `/health` every 30 s) succeeds. `/predict` takes the same request as in
+section 4.
+
+Batch scoring with a mounted folder (input and output files live on the host):
+
+```bash
+mkdir -p data/io && cp data/sample_input.csv data/io/
+docker run --rm -v "$PWD/data/io:/io" churn-api \
+  python predict_batch.py --input /io/sample_input.csv --output /io/predictions.csv
+```
+
+On a Linux host, the mounted folder keeps your host file ownership, so the image's
+non-root user (uid 10001) may be unable to write to it, and any files it does write are
+owned by uid 10001. Run the container as your own user instead:
+
+```bash
+docker run --rm --user "$(id -u):$(id -g)" -v "$PWD/data/io:/io" churn-api \
+  python predict_batch.py --input /io/sample_input.csv --output /io/predictions.csv
+```
+
+(Docker Desktop on macOS and Windows maps file ownership itself, so this is not needed there.)
+
+The benchmark numbers in section 7 were measured natively, not in Docker: Docker on
+macOS runs containers inside a Linux virtual machine, which adds its own overhead.

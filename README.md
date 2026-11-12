@@ -1,19 +1,42 @@
 # Mini Production ML System: Customer Churn Prediction
 
-> Work in progress. Training, serving, batch scoring, testing and Docker
-> instructions will be added as those parts are built.
+An end-to-end churn prediction system on the IBM Telco Customer Churn dataset:
+leak-free data pipeline, baselines and a class-weighted LightGBM model, a FastAPI
+service (`/health`, `/predict`) with a heuristic and prior-rate fallback, a batch
+scoring CLI, tests, a latency/throughput benchmark and a Docker image.
+
+## Quickstart
+
+The trained model is committed (`artifacts/churn_model.joblib`), so the API, the batch
+CLI and the tests run straight after cloning, with no dataset download.
+
+```bash
+git clone https://github.com/Shazid08/mini-production-ml-system.git
+cd mini-production-ml-system
+python3.12 -m venv .venv
+source .venv/bin/activate          # Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+
+python -m pytest                   # 111 passed, 3 skipped (the 3 need the Kaggle data)
+python predict_batch.py --input data/sample_input.csv --output data/output/predictions.csv
+uvicorn serving.app:app --port 8000  # then try the curl examples in section 4
+```
+
+To reproduce the data split and the model from scratch, follow sections 2 and 3.
 
 ## 1. Setup
 
 Requires Python 3.12 (developed on 3.12.7).
 
 ```bash
-git clone <repo-url> mini-production-ml-system
+git clone https://github.com/Shazid08/mini-production-ml-system.git
 cd mini-production-ml-system
 python3.12 -m venv .venv
-source .venv/bin/activate
+source .venv/bin/activate          # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 ```
+
+`requirements.txt` pins every package (direct and transitive) to an exact version.
 
 ## 2. Get the data
 
@@ -26,7 +49,7 @@ Download it with:
 python -m src.data_pipeline
 ```
 
-This uses `kagglehub` to place `Telco_customer_churn.xlsx` (7,043 rows, 33 columns)
+This needs internet access. It uses `kagglehub` to place `Telco_customer_churn.xlsx` (7,043 rows, 33 columns)
 in `data/raw/`. It is a public dataset, so no Kaggle account or API key is needed.
 The same command then prints the leakage-audit evidence, cleans the data and writes a
 stratified 70/15/15 split (seed 42) to `data/processed/{train,val,test}.csv`.
@@ -47,6 +70,7 @@ evaluates every model once on the test split. Outputs:
 - `artifacts/figures/`: test-set PR curve and confusion matrix
 
 `python -m src.train --skip-test` runs everything except the test evaluation.
+Training is seeded, so re-running it gives the same model predictions and metrics.
 
 ## 4. Online API (FastAPI)
 
@@ -60,6 +84,14 @@ The model artifact is loaded once at startup. Endpoints:
 - `POST /predict`: scores one customer.
 
 ```bash
+curl -s http://127.0.0.1:8000/health
+```
+
+```json
+{"status":"ok","model_loaded":true,"threshold":0.6802878662683045,"fallback_probability":0.2653144016227181,"simulated_failure":null,"detail":null}
+```
+
+```bash
 curl -s -X POST http://127.0.0.1:8000/predict -H 'Content-Type: application/json' -d '{
   "request_id": "req-001", "customer_id": "CUST-1001",
   "tenure_months": 4, "monthly_charges": 89.65, "total_charges": 358.6,
@@ -69,6 +101,22 @@ curl -s -X POST http://127.0.0.1:8000/predict -H 'Content-Type: application/json
   "tech_support": "No", "streaming_tv": "Yes", "streaming_movies": "No",
   "contract": "Month-to-month", "paperless_billing": "Yes", "payment_method": "Electronic check"}'
 ```
+
+```json
+{"request_id":"req-001","customer_id":"CUST-1001","churn_probability":0.8746326289659453,"churn_prediction":true,
+ "threshold":0.6802878662683045,"decision_rule":"model probability >= 0.6803","source":"model","fallback_reason":null,"warnings":[]}
+```
+
+A malformed request is rejected with `422` and a list of every problem, for example
+sending `"tenure_months": "12"` (a string) and `"contract": "Three year"` (not an allowed value)
+(response abbreviated):
+
+```json
+{"detail":[{"type":"int_type","loc":["body","tenure_months"],"msg":"Input should be a valid integer","input":"12"},
+ {"type":"literal_error","loc":["body","contract"],"msg":"Input should be 'Month-to-month', 'One year' or 'Two year'", ...}]}
+```
+
+Interactive API documentation is served at `http://127.0.0.1:8000/docs`.
 
 Validation rules (violations return `422`): every field is required except
 `total_charges`, which may be `null` only when `tenure_months` is 0; categorical
@@ -122,7 +170,8 @@ artifact), inference integrity (the artifact reproduces its stored reference
 predictions, probabilities in [0, 1], no leak columns among the features, identical
 API and batch output), the batch CLI (messy-file handling and exit codes) and the
 split logic. Three tests need the downloaded dataset and are skipped, with a message,
-until `python -m src.data_pipeline` has been run.
+until `python -m src.data_pipeline` has been run, so a fresh clone shows
+`111 passed, 3 skipped`.
 
 ## 7. Benchmark
 
@@ -187,3 +236,31 @@ docker run --rm --user "$(id -u):$(id -g)" -v "$PWD/data/io:/io" churn-api \
 
 The benchmark numbers in section 7 were measured natively, not in Docker: Docker on
 macOS runs containers inside a Linux virtual machine, which adds its own overhead.
+
+## Repository layout
+
+```
+mini-production-ml-system/
+├── README.md
+├── requirements.txt         pinned dependencies
+├── Dockerfile, .dockerignore
+├── pytest.ini
+├── predict_batch.py         batch scoring CLI
+├── data/
+│   └── sample_input.csv     20 test-split customers (the full dataset is downloaded, not committed)
+├── artifacts/
+│   ├── churn_model.joblib   fitted pipeline + threshold + fallback settings
+│   ├── metrics.json         grid search, validation/test metrics, cost analysis, bootstrap CI
+│   ├── benchmark_results.json
+│   └── figures/             test-set PR curve and confusion matrix
+├── src/
+│   ├── data_pipeline.py     download, leakage audit, cleaning, stratified split
+│   ├── train.py             baselines, LightGBM search, threshold choice, test evaluation, export
+│   └── evaluate.py          metrics, threshold rule, cost view, bootstrap, figures
+├── serving/
+│   ├── app.py               FastAPI service (/health, /predict)
+│   ├── schemas.py           Pydantic request/response schemas and validation rules
+│   ├── scoring.py           shared model loading, feature preparation, scoring with fallback
+│   └── benchmark.py         latency and throughput benchmark
+└── tests/                   pytest suite and fixtures
+```
